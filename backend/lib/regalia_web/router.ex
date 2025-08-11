@@ -1,29 +1,35 @@
 defmodule RegaliaWeb.Router do
   use RegaliaWeb, :router
 
+  import RegaliaWeb.UserAuth
+
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_live_flash
-    plug :put_root_layout, html: {RegaliaWeb.Layouts, :root}
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_live_flash)
+    plug(:put_root_layout, html: {RegaliaWeb.Layouts, :root})
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
+    plug(:fetch_current_user)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
+    plug(:fetch_current_scope_for_api_user)
   end
 
   scope "/", RegaliaWeb do
-    pipe_through :browser
+    pipe_through(:browser)
 
-    get "/", PageController, :home
+    get("/", PageController, :home)
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", RegaliaWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", RegaliaWeb do
+    pipe_through(:api)
+
+    post("/signup", UserRegistrationController, :create)
+    post("/login", UserSessionController, :create)
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:regalia, :dev_routes) do
@@ -35,10 +41,35 @@ defmodule RegaliaWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do
-      pipe_through :browser
+      pipe_through(:browser)
 
-      live_dashboard "/dashboard", metrics: RegaliaWeb.Telemetry
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
+      live_dashboard("/dashboard", metrics: RegaliaWeb.Telemetry)
+      forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
+  end
+
+  ## Authentication routes
+
+  scope "/", RegaliaWeb do
+    pipe_through([:browser, :redirect_if_user_is_authenticated])
+
+    post("/users/reset_password", UserResetPasswordController, :create)
+    put("/users/reset_password/:token", UserResetPasswordController, :update)
+  end
+
+  scope "/", RegaliaWeb do
+    pipe_through([:browser, :require_authenticated_user])
+
+    put("/users/settings", UserSettingsController, :update)
+  end
+
+  scope "/", RegaliaWeb do
+    pipe_through([:browser])
+
+    delete("/users/log_out", UserSessionController, :delete)
+    get("/users/confirm", UserConfirmationController, :new)
+    post("/users/confirm", UserConfirmationController, :create)
+    get("/users/confirm/:token", UserConfirmationController, :edit)
+    post("/users/confirm/:token", UserConfirmationController, :update)
   end
 end

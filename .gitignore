@@ -7,3 +7,11 @@ count.txt
 .env
 .nitro
 .tanstack
+
+/backend/_build
+/backend/tmp
+/backend/doc
+/backend/deps
+/backend/.iex.exs
+/backend/*.dump
+

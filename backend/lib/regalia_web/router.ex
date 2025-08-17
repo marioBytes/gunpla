@@ -37,8 +37,6 @@ defmodule RegaliaWeb.Router do
 
   scope "/api", RegaliaWeb do
     pipe_through(:api_authenticated)
-
-    get("/users", UserController, :index)
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

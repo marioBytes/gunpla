@@ -37,6 +37,12 @@ defmodule RegaliaWeb.Router do
 
   scope "/api", RegaliaWeb do
     pipe_through(:api_authenticated)
+
+    get("/models", ModelController, :index)
+    post("/models", ModelController, :create)
+    get("/models/:id", ModelController, :show)
+    put("/models/:id", ModelController, :update)
+    delete("/models/:id", ModelController, :delete)
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

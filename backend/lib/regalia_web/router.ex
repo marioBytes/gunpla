@@ -15,6 +15,10 @@ defmodule RegaliaWeb.Router do
 
   pipeline :api do
     plug(:accepts, ["json"])
+  end
+
+  pipeline :api_authenticated do
+    plug(:accepts, ["json"])
     plug(:fetch_current_scope_for_api_user)
   end
 
@@ -29,6 +33,12 @@ defmodule RegaliaWeb.Router do
 
     post("/signup", UserRegistrationController, :create)
     post("/login", UserSessionController, :create)
+  end
+
+  scope "/api", RegaliaWeb do
+    pipe_through(:api_authenticated)
+
+    get("/users", UserController, :index)
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

@@ -1,11 +1,15 @@
 defmodule RegaliaWeb.UserJSON do
   alias Regalia.Accounts.User
 
-  def index(users) do
-    %{data: %{user: show(users)}}
+  def index(%{users: users}) do
+    %{data: for(user <- users, do: data(user))}
   end
 
-  def show(%User{} = user) do
+  def show(%{user: user}) do
+    %{data: data(user)}
+  end
+
+  defp data(%User{} = user) do
     %{
       id: user.id,
       email: user.email,

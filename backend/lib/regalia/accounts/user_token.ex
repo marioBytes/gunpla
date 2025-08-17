@@ -12,7 +12,7 @@ defmodule Regalia.Accounts.UserToken do
   @confirm_validity_in_days 7
   @change_email_validity_in_days 7
   @session_validity_in_days 60
-  @api_token_validity_in_days 365
+  @api_token_validity_in_days 30
 
   schema "users_tokens" do
     field(:token, :binary)
@@ -188,7 +188,7 @@ defmodule Regalia.Accounts.UserToken do
 
   The given token is valid if it matches its hashed counterpart in the
   database and the user email has not changed. This function also checks
-  if the token is being used within 365 days.
+  if the token is being used within 30 days.
   """
   def verify_api_token_query(token) do
     case Base.url_decode64(token, padding: false) do

@@ -43,6 +43,8 @@ defmodule RegaliaWeb.Router do
     get("/models/:id", ModelController, :show)
     put("/models/:id", ModelController, :update)
     delete("/models/:id", ModelController, :delete)
+
+    delete("/logout", UserSessionController, :delete)
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

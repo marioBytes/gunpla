@@ -242,6 +242,21 @@ defmodule Regalia.Accounts do
     :ok
   end
 
+  @doc """
+  Deletes the signed API token
+  """
+  def delete_user_api_token(token) do
+    case UserToken.get_user_api_token(token) do
+      {:ok, query} ->
+        Repo.delete_all(query)
+
+        :ok
+
+      _ ->
+        :error
+    end
+  end
+
   ## Confirmation
 
   @doc ~S"""

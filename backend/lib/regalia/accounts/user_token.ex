@@ -195,19 +195,35 @@ defmodule Regalia.Accounts.UserToken do
       {:ok, decoded_token} ->
         hashed_token = :crypto.hash(@hash_algorithm, decoded_token)
 
-        query =
-          from(token in by_token_and_context_query(hashed_token, "api-token"),
-            join: user in assoc(token, :user),
-            where:
-              token.inserted_at > ago(^@api_token_validity_in_days, "day") and
-                token.sent_to == user.email,
-            select: user
-          )
+        query = base_api_token_query(hashed_token) |> select([_token, user], user)
 
         {:ok, query}
 
       :error ->
         :error
     end
+  end
+
+  def get_user_api_token(token) do
+    case Base.url_decode64(token, padding: false) do
+      {:ok, decoded_token} ->
+        hashed_token = :crypto.hash(@hash_algorithm, decoded_token)
+
+        query = base_api_token_query(hashed_token)
+
+        {:ok, query}
+
+      :error ->
+        :error
+    end
+  end
+
+  defp base_api_token_query(hashed_token) do
+    from(token in by_token_and_context_query(hashed_token, "api-token"),
+      join: user in assoc(token, :user),
+      where:
+        token.inserted_at > ago(^@api_token_validity_in_days, "day") and
+          token.sent_to == user.email
+    )
   end
 end

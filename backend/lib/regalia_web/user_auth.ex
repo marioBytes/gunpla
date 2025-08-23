@@ -88,6 +88,23 @@ defmodule RegaliaWeb.UserAuth do
     |> redirect(to: ~p"/")
   end
 
+  def log_out_user_api(conn) do
+    api_token = get_api_token(conn)
+
+    if api_token && Accounts.delete_user_api_token(api_token) do
+      send_resp(conn, 204, "")
+    else
+      send_resp(conn, 400, "Unable to log out user, please try again")
+    end
+  end
+
+  defp get_api_token(conn) do
+    case get_req_header(conn, "authorization") do
+      ["Bearer " <> token] -> token
+      _ -> nil
+    end
+  end
+
   @doc """
   Authenticates the user by looking into the session
   and remember me token.

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import EntryForm from './components/EntryForm'
 import Status from './components/Status'
@@ -7,6 +8,7 @@ import { STATUS } from './constants'
 import type { Entry } from './types'
 
 type SortBy = 'name' | 'status' | 'grade' | 'dateAdded'
+const queryClient = new QueryClient()
 
 function App() {
   const [showModal, setShowModal] = useState<boolean>(false)
@@ -91,91 +93,97 @@ function App() {
   }, [entries, searchTerm, sortBy, sortOrder])
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Gunpla Backlog</h1>
-          <p className="text-gray-400">
-            Track your Gundam model collection and build progress
-          </p>
-        </div>
-
-        <div className="flex flex-col md:flex-row gap-4 mb-6">
-          <div className="flex-1 relative">
-            <input
-              type="text"
-              placeholder="Search by name or series..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
+    <QueryClientProvider client={queryClient}>
+      <div className="min-h-screen bg-gray-900 text-gray-100">
+        <div className="container mx-auto px-4 py-8">
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-white mb-2">
+              Gunpla Backlog
+            </h1>
+            <p className="text-gray-400">
+              Track your Gundam model collection and build progress
+            </p>
           </div>
 
-          <div className="flex gap-2">
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortBy)}
-              className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500"
-            >
-              {sortOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+          <div className="flex flex-col md:flex-row gap-4 mb-6">
+            <div className="flex-1 relative">
+              <input
+                type="text"
+                placeholder="Search by name or series..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            <div className="flex gap-2">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortBy)}
+                className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500"
+              >
+                {sortOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={() =>
+                  setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+                }
+                className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                {sortOrder === 'asc' ? '↑' : '↓'}
+              </button>
+            </div>
             <button
-              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-              className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-700 transition-colors"
+              onClick={() => setShowModal(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors font-medium"
             >
-              {sortOrder === 'asc' ? '↑' : '↓'}
+              Add Entry
             </button>
           </div>
-          <button
-            onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors font-medium"
-          >
-            Add Entry
-          </button>
-        </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          {STATUS.map((status) => {
-            if (entries.length === 0) {
-              return
-            }
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            {STATUS.map((status) => {
+              if (entries.length === 0) {
+                return
+              }
 
-            const count = entries.filter((entry) => {
-              const transformedStatus = entry.status
-                .split(' ')
-                .join('_')
-                .toLowerCase()
+              const count = entries.filter((entry) => {
+                const transformedStatus = entry.status
+                  .split(' ')
+                  .join('_')
+                  .toLowerCase()
 
-              return transformedStatus === status.value
-            }).length
+                return transformedStatus === status.value
+              }).length
 
-            return <Status key={status.value} status={status} count={count} />
-          })}
-        </div>
-
-        {filteredAndSortedEntries.length > 0 ? (
-          <div className="space-y-2">
-            {filteredAndSortedEntries.map((entry) => {
-              return <EntryCard key={entry.id} entry={entry} />
+              return <Status key={status.value} status={status} count={count} />
             })}
           </div>
-        ) : (
-          <div className="text-center py-12">
-            <p className="text-gray-400">No entries found</p>
+
+          {filteredAndSortedEntries.length > 0 ? (
+            <div className="space-y-2">
+              {filteredAndSortedEntries.map((entry) => {
+                return <EntryCard key={entry.id} entry={entry} />
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-400">No entries found</p>
+            </div>
+          )}
+        </div>
+
+        {showModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+            <EntryForm onCancel={() => setShowModal(false)} />
           </div>
         )}
       </div>
-
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <EntryForm onCancel={() => setShowModal(false)} />
-        </div>
-      )}
-    </div>
+    </QueryClientProvider>
   )
 }
 

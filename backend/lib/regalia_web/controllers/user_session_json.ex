@@ -1,13 +1,18 @@
 defmodule RegaliaWeb.UserSessionJSON do
-  def show(%{token: token}) do
-    %{data: data(token)}
+  def show(%{user: user, token: token}) do
+    %{data: data(user, token)}
   end
 
   def render(%{error: error}) do
     %{error: error}
   end
 
-  defp data(token) when is_binary(token) do
-    %{token: token}
+  defp data(user, token) when is_binary(token) do
+    %{
+      id: user.id,
+      email: user.email,
+      username: user.username,
+      token: token
+    }
   end
 end

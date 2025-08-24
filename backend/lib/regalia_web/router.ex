@@ -15,10 +15,12 @@ defmodule RegaliaWeb.Router do
 
   pipeline :api do
     plug(:accepts, ["json"])
+    plug(CORSPlug, origin: "http://localhost:3000")
   end
 
   pipeline :api_authenticated do
     plug(:accepts, ["json"])
+    plug(CORSPlug, origin: "http://localhost:3000")
     plug(:fetch_current_scope_for_api_user)
   end
 

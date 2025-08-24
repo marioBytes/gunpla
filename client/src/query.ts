@@ -5,6 +5,30 @@ const instance = axios.create({
   timeout: 1000,
 })
 
+instance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('authToken')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  },
+  (error) => {
+    return Promise.reject()
+  },
+)
+
+instance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('authToken')
+      window.location.href = '/login'
+    }
+    return Promise.reject()
+  },
+)
+
 interface QueryParams {
   queryKey: string
 }
@@ -18,8 +42,18 @@ interface Entry {
   image?: string | null
 }
 
-export const userLoginQueryFn = async () => {
-  const { data } = await instance.post('/users')
+export interface AuthParams {
+  email: string
+  password: string
+}
+
+export const userLoginQueryFn = async (payload: AuthParams) => {
+  const { data } = await instance.post('/login', { user: payload })
+
+  if (data.data.token) {
+    console.log(data.data.token)
+    localStorage.setItem('authToken', data.data.token)
+  }
 
   return await data
 }

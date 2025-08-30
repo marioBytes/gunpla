@@ -51,7 +51,7 @@ const Dashboard: React.FC<{}> = () => {
           .includes(searchTerm.toLocaleLowerCase()),
     )
 
-    return filtered.sort((a, b) => {
+    return filtered.sort((a: Entry, b: Entry) => {
       let aValue: string | Date = a[sortBy]
       let bValue: string | Date = b[sortBy]
 
@@ -122,7 +122,7 @@ const Dashboard: React.FC<{}> = () => {
               return
             }
 
-            const count = entries.filter((entry) => {
+            const count = entries.filter((entry: Entry) => {
               const transformedStatus = entry.status
                 .split(' ')
                 .join('_')
@@ -139,7 +139,7 @@ const Dashboard: React.FC<{}> = () => {
           <div className="space-y-2">
             {filteredAndSortedEntries().map((entry: Entry) => {
               return (
-                <div>
+                <div key={entry.id}>
                   <Link
                     to="/entries/$entryId"
                     params={{ entryId: entry.id }}

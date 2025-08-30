@@ -26,9 +26,7 @@ const EntryCard: React.FC<EntryProps> = ({ entry }) => {
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between">
             <div>
-              <h3 className="font-semibold text-white text-lg truncate">
-                {entry.name}
-              </h3>
+              <h3 className="font-semibold text-white text-lg">{entry.name}</h3>
               <p className="text-gray-400 text-sm">{entry.series}</p>
               <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
                 <span>{entry.grade}</span>

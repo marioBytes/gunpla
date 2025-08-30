@@ -57,7 +57,7 @@ const ModelViewPage = () => {
   }
 
   const getGrade = (value: string) => {
-    const grade = GRADES.find((grade) => grade.value === value)
+    const grade = GRADES.find((g) => g.value === value)
 
     if (grade) {
       return grade.label

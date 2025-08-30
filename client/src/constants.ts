@@ -1,4 +1,5 @@
 export const GRADES = [
+  { label: '', value: '' },
   { label: 'HG', value: 'high_grade' },
   { label: 'RG', value: 'real_grade' },
   { label: 'MG', value: 'master_grade' },

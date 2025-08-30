@@ -1,15 +1,15 @@
 export interface Entry {
-  id: number
+  id: string
   name: string
   status: string
   grade: string
   series?: string
-  image?: string | null
+  images: Array<string>
   dateAdded: string
 }
 
 export interface EntryForm {
-  id: number
+  id: string
   name: string
   status: string
   grade: string

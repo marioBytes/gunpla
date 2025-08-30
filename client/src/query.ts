@@ -71,13 +71,15 @@ export const modelQueryFn = async ({ queryKey }: QueryParams) => {
 }
 
 export const modelCreateQueryFn = async (modelData: Entry) => {
-  const { data } = await instance.post('/models', modelData)
+  const payload = { model: modelData }
+  const { data } = await instance.post('/models', payload)
 
   return await data
 }
 
 export const modelUpdateQueryFn = async (modelData: Entry) => {
-  const { data } = await instance.put(`/models/${modelData.id}`, modelData)
+  const payload = { id: modelData.id, model: modelData }
+  const { data } = await instance.put(`/models/${modelData.id}`, payload)
 
   return await data
 }

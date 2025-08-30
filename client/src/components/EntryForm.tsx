@@ -1,18 +1,42 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+
+import type { Entry } from '@/types'
 import { GRADES, STATUS } from '@/constants'
 import { useAppForm } from '@/hooks/form'
+import { modelCreateQueryFn, modelQueryFn, modelUpdateQueryFn } from '@/query'
 
 interface EntryFormProps {
+  entry?: Entry
   onCancel: () => void
 }
 
-const EntryForm: React.FC<EntryFormProps> = ({ onCancel }) => {
+const EntryForm: React.FC<EntryFormProps> = ({ entry, onCancel }) => {
+  const queryClient = useQueryClient()
+
+  const mutation = useMutation({
+    mutationFn: entry ? modelUpdateQueryFn : modelCreateQueryFn,
+    onSuccess: (data, variables) => {
+      queryClient.setQueryData(['models', { id: variables.id }], data)
+
+      queryClient.fetchQuery({
+        queryKey: ['/model', '$entryId'],
+        queryFn: () => modelQueryFn({ queryKey: data.data.id }),
+      })
+
+      onCancel()
+    },
+    onError: (error) => {
+      console.error('Something went wrong:', error)
+    },
+  })
+
   const form = useAppForm({
     defaultValues: {
-      name: '',
-      grade: '',
-      series: '',
-      status: '',
-      imageUrl: '',
+      name: entry?.name || '',
+      grade: entry?.grade || '',
+      series: entry?.series || '',
+      status: entry?.status || STATUS[0].value,
+      images: entry?.images || [],
     },
     validators: {
       onChange: ({ value }) => {
@@ -30,7 +54,15 @@ const EntryForm: React.FC<EntryFormProps> = ({ onCancel }) => {
       },
     },
     onSubmit: ({ value }) => {
-      console.log(value)
+      const mutationData = {
+        ...(entry && { id: entry.id }),
+        name: value.name,
+        grade: value.grade,
+        series: value.series,
+        status: value.status,
+      }
+
+      mutation.mutate(mutationData)
     },
   })
 
@@ -52,7 +84,9 @@ const EntryForm: React.FC<EntryFormProps> = ({ onCancel }) => {
         }}
         className="p-6"
       >
-        <h2 className="text-xl font-bold mb-4">Add New Entry</h2>
+        <h2 className="text-xl font-bold mb-4">
+          {entry ? 'Update ' : 'Add New '} Entry
+        </h2>
 
         <div className="space-y-4">
           <form.AppField name="name">
@@ -77,10 +111,6 @@ const EntryForm: React.FC<EntryFormProps> = ({ onCancel }) => {
           <form.AppField name="status">
             {(field) => <field.Select label="Status" values={STATUS} />}
           </form.AppField>
-
-          <form.AppField name="imageUrl">
-            {(field) => <field.TextField label="Image URL" />}
-          </form.AppField>
         </div>
 
         <div className="flex gap-3 mt-6">
@@ -91,7 +121,10 @@ const EntryForm: React.FC<EntryFormProps> = ({ onCancel }) => {
             Cancel
           </button>
           <form.AppForm>
-            <form.SubscribeButton label="Add Entry" />
+            <form.SubscribeButton
+              label={`${entry ? 'Update' : 'Add'} Entry`}
+              mutation={mutation}
+            />
           </form.AppForm>
         </div>
       </form>

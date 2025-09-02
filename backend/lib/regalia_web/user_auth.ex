@@ -212,8 +212,7 @@ defmodule RegaliaWeb.UserAuth do
       conn
     else
       conn
-      |> maybe_store_return_to()
-      |> redirect(to: ~p"/users/log_in")
+      |> send_resp(:unauthorized, "You must be logged in to access this page")
       |> halt()
     end
   end

@@ -16,6 +16,7 @@ defmodule RegaliaWeb.Router do
     plug(:accepts, ["json"])
     plug(:fetch_session)
     plug(:fetch_current_user)
+    plug(:require_authenticated_user)
   end
 
   scope "/", RegaliaWeb do

@@ -14,7 +14,7 @@ defmodule RegaliaWeb.ModelController do
   end
 
   def create(conn, %{"model" => model_params}) do
-    user = conn.assigns.current_user.user
+    user = conn.assigns.current_user
 
     with {:ok, %Model{} = model} <- Models.create_model(user, model_params) do
       conn
@@ -29,7 +29,7 @@ defmodule RegaliaWeb.ModelController do
   end
 
   def update(conn, %{"id" => id, "model" => model_params}) do
-    user = conn.assigns.current_user.user
+    user = conn.assigns.current_user
     model = Models.get_model!(id)
 
     with :ok <- Authorize.authorized?(:model, user, model),
@@ -39,7 +39,7 @@ defmodule RegaliaWeb.ModelController do
   end
 
   def delete(conn, %{"id" => id}) do
-    user = conn.assigns.current_user.user
+    user = conn.assigns.current_user
     model = Models.get_model!(id)
 
     with :ok <- Authorize.authorized?(:model, user, model),

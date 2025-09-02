@@ -1,6 +1,7 @@
 import { useStore } from '@tanstack/react-form'
 
 import { useFieldContext, useFormContext } from '../hooks/form-context'
+import type { UseMutationResult } from '@tanstack/react-query'
 
 export function SubscribeButton({
   label,
@@ -9,7 +10,7 @@ export function SubscribeButton({
 }: {
   label: string
   className?: string
-  mutation?: any
+  mutation: UseMutationResult<any, Error, any, unknown>
 }) {
   const form = useFormContext()
   return (

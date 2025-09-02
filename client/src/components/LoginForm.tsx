@@ -41,10 +41,6 @@ const LoginForm: React.FC<{}> = () => {
     },
   })
 
-  if (login.isSuccess) {
-    console.log(login.data)
-  }
-
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
       <div className="container mx-auto px-4 py-8">
@@ -83,7 +79,11 @@ const LoginForm: React.FC<{}> = () => {
             </div>
 
             <form.AppForm>
-              <form.SubscribeButton label="Sign In" className="w-full" />
+              <form.SubscribeButton
+                label="Sign In"
+                className="w-full"
+                mutation={login}
+              />
             </form.AppForm>
           </div>
           <div className="mt-6 text-center">

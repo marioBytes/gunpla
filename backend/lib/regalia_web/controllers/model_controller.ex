@@ -8,13 +8,13 @@ defmodule RegaliaWeb.ModelController do
   action_fallback(RegaliaWeb.FallbackController)
 
   def index(conn, _params) do
-    user = conn.assigns.current_scope.user
+    user = conn.assigns.current_user
     models = Models.list_user_models(user.id)
     render(conn, :index, models: models)
   end
 
   def create(conn, %{"model" => model_params}) do
-    user = conn.assigns.current_scope.user
+    user = conn.assigns.current_user.user
 
     with {:ok, %Model{} = model} <- Models.create_model(user, model_params) do
       conn
@@ -29,7 +29,7 @@ defmodule RegaliaWeb.ModelController do
   end
 
   def update(conn, %{"id" => id, "model" => model_params}) do
-    user = conn.assigns.current_scope.user
+    user = conn.assigns.current_user.user
     model = Models.get_model!(id)
 
     with :ok <- Authorize.authorized?(:model, user, model),
@@ -39,7 +39,7 @@ defmodule RegaliaWeb.ModelController do
   end
 
   def delete(conn, %{"id" => id}) do
-    user = conn.assigns.current_scope.user
+    user = conn.assigns.current_user.user
     model = Models.get_model!(id)
 
     with :ok <- Authorize.authorized?(:model, user, model),

@@ -30,6 +30,8 @@ defmodule RegaliaWeb.Router do
 
     post("/signup", UserRegistrationController, :create)
     post("/login", UserSessionController, :create)
+
+    get("/models/:id", ModelController, :show)
   end
 
   scope "/api", RegaliaWeb do
@@ -39,7 +41,6 @@ defmodule RegaliaWeb.Router do
 
     get("/models", ModelController, :index)
     post("/models", ModelController, :create)
-    get("/models/:id", ModelController, :show)
     put("/models/:id", ModelController, :update)
     delete("/models/:id", ModelController, :delete)
 

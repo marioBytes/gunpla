@@ -10,13 +10,15 @@ import { Link, useParams } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 
 import EntryForm from './EntryForm'
-import type { Entry } from '@/types'
+import type { Entry } from '@/types/entries'
 import { GRADES } from '@/constants'
 import { modelQueryFn } from '@/query'
+import { useAuth } from '@/auth'
 
-const ModelViewPage = () => {
+const ModelViewPage: React.FC<{}> = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [isEditMode, setIsEditMode] = useState(false)
+  const { user } = useAuth()
   const { entryId } = useParams({ from: '/entries/$entryId' })
 
   const { data, isError, isLoading } = useQuery({
@@ -69,15 +71,17 @@ const ModelViewPage = () => {
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="flex items-center gap-4 mb-6">
-          <Link
-            to="/dashboard"
-            className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Back to Dashboard
-          </Link>
-        </div>
+        {user && (
+          <div className="flex items-center gap-4 mb-6">
+            <Link
+              to="/dashboard"
+              className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              Back to Dashboard
+            </Link>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="space-y-4">
@@ -213,16 +217,17 @@ const ModelViewPage = () => {
                   </div>
                 </div>
 
-                {/* Edit/Save buttons at bottom */}
-                <div className="mt-8 pt-6 border-t border-gray-700">
-                  <button
-                    onClick={() => setIsEditMode(true)}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
-                  >
-                    <Edit className="w-5 h-5" />
-                    Edit Model Information
-                  </button>
-                </div>
+                {user?.id === model.owner_id && (
+                  <div className="mt-8 pt-6 border-t border-gray-700">
+                    <button
+                      onClick={() => setIsEditMode(true)}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+                    >
+                      <Edit className="w-5 h-5" />
+                      Edit Model Information
+                    </button>
+                  </div>
+                )}
               </div>
             </>
           )}

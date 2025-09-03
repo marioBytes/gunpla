@@ -5,6 +5,7 @@ export interface Entry {
   grade: string
   series?: string
   images: Array<string>
+  owner_id: string
   dateAdded: string
 }
 

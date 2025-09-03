@@ -22,6 +22,7 @@ defmodule RegaliaWeb.ModelJSON do
       grade: model.grade,
       series: model.series,
       status: model.status,
+      owner_id: model.user_id,
       images: []
     }
   end

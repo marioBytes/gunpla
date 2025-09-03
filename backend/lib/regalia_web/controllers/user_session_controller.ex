@@ -18,6 +18,8 @@ defmodule RegaliaWeb.UserSessionController do
   end
 
   def delete(conn, _params) do
-    UserAuth.log_out_user_api(conn)
+    conn
+    |> UserAuth.log_out_user()
+    |> send_resp(:no_content, "")
   end
 end

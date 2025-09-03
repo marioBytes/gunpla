@@ -54,6 +54,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = (email: string, password: string) => {
     const res = loginMutation.mutateAsync({ email, password })
+    setAuthIsLoading(true)
 
     res
       .then((resp) => {
@@ -64,10 +65,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(null)
         setIsAuthenticated(false)
       })
+      .finally(() => {
+        setAuthIsLoading(false)
+      })
   }
 
   const logout = () => {
     const res = logoutMutation.mutateAsync()
+    setAuthIsLoading(true)
 
     res
       .then((_data) => {
@@ -76,6 +81,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       })
       .catch(() => {
         throw new Error('Logout failed')
+      })
+      .finally(() => {
+        setAuthIsLoading(false)
       })
   }
 

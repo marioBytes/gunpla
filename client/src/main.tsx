@@ -1,20 +1,11 @@
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
-import { createRouter, RouterProvider } from '@tanstack/react-router'
 
 import * as TanStackQueryProvider from './integrations/tanstack-query/root-provider.tsx'
-import { routeTree } from './routeTree.gen'
 
 import './styles.css'
 import reportWebVitals from './reportWebVitals.ts'
-
-const router = createRouter({ routeTree })
-
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router
-  }
-}
+import App from './App.tsx'
 
 const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
@@ -22,7 +13,7 @@ if (rootElement && !rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <TanStackQueryProvider.Provider>
-        <RouterProvider router={router} />
+        <App />
       </TanStackQueryProvider.Provider>
     </StrictMode>,
   )

@@ -35,6 +35,8 @@ defmodule RegaliaWeb.Router do
   scope "/api", RegaliaWeb do
     pipe_through(:api_authenticated)
 
+    get("/users", UserController, :show)
+
     get("/models", ModelController, :index)
     post("/models", ModelController, :create)
     get("/models/:id", ModelController, :show)

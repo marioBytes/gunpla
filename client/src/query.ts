@@ -24,10 +24,22 @@ export interface AuthParams {
   password: string
 }
 
+export const userQueryFn = async () => {
+  const { data } = await instance.get('/users')
+
+  return await data
+}
+
 export const userLoginQueryFn = async (payload: AuthParams) => {
   const { data } = await instance.post('/login', { user: payload })
 
   return await data
+}
+
+export const userLogoutFn = async () => {
+  const { data } = await instance.delete('/logout')
+
+  return data
 }
 
 export const modelsQueryFn = async () => {

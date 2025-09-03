@@ -1,15 +1,17 @@
 import { useMutation } from '@tanstack/react-query'
 import type { AuthParams } from '@/query'
+import type { AuthState } from '@/types/auth'
 import { useAppForm } from '@/hooks/form'
 import { userLoginQueryFn } from '@/query'
+import Route from '@/routes/login.tsx'
 
-const LoginForm: React.FC<{}> = () => {
-  const login = useMutation({
-    mutationFn: (authData: AuthParams) => {
-      return userLoginQueryFn(authData)
-    },
-  })
+interface LoginFormProps {
+  auth: AuthState
+  redirect: any
+  navigate: any
+}
 
+const LoginForm: React.FC<LoginFormProps> = ({ auth, redirect, navigate }) => {
   const form = useAppForm({
     defaultValues: {
       email: '',
@@ -37,7 +39,8 @@ const LoginForm: React.FC<{}> = () => {
       },
     },
     onSubmit: ({ value }) => {
-      login.mutate({ email: value.email, password: value.password })
+      auth.login(value.email, value.password)
+      navigate({ to: redirect })
     },
   })
 
@@ -79,11 +82,7 @@ const LoginForm: React.FC<{}> = () => {
             </div>
 
             <form.AppForm>
-              <form.SubscribeButton
-                label="Sign In"
-                className="w-full"
-                mutation={login}
-              />
+              <form.SubscribeButton label="Sign In" className="w-full" />
             </form.AppForm>
           </div>
           <div className="mt-6 text-center">

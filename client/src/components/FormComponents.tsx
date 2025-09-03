@@ -10,19 +10,21 @@ export function SubscribeButton({
 }: {
   label: string
   className?: string
-  mutation: UseMutationResult<any, Error, any, unknown>
+  mutation?: UseMutationResult<any, Error, any, unknown>
 }) {
   const form = useFormContext()
   return (
     <form.Subscribe selector={(state) => state}>
       {(state) => {
+        const isPending = mutation?.isPending || false
+
         return (
           <button
             type="submit"
-            disabled={state.isSubmitting || mutation.isPending}
+            disabled={state.isSubmitting || isPending}
             className={`flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg transition-colors${className ? ` ${className}` : ''}`}
           >
-            {mutation.isPending || state.isSubmitting ? 'Submitting...' : label}
+            {isPending || state.isSubmitting ? 'Submitting...' : label}
           </button>
         )
       }}

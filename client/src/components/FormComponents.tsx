@@ -22,7 +22,7 @@ export function SubscribeButton({
           <button
             type="submit"
             disabled={state.isSubmitting || isPending}
-            className={`flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg transition-colors${className ? ` ${className}` : ''}`}
+            className={`w-full py-3 px-4 bg-yellow-500 hover:bg-yellow-600 disabled:bg-neutral-600 text-black font-medium rounded-lg transition-colors flex items-center justify-center gap-2${className ? ` ${className}` : ''}`}
           >
             {isPending || state.isSubmitting ? 'Submitting...' : label}
           </button>
@@ -67,7 +67,10 @@ export function TextField({
 
   return (
     <div className="space-y-4">
-      <label htmlFor={label} className="block text-sm font-medium mb-1">
+      <label
+        htmlFor={label}
+        className="block text-sm font-medium text-neutral-300 mb-2"
+      >
         {label}
       </label>
       <input
@@ -76,7 +79,7 @@ export function TextField({
         placeholder={placeholder}
         onBlur={field.handleBlur}
         onChange={(e) => field.handleChange(e.target.value)}
-        className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+        className="w-full pl-2 pr-4 py-3 bg-neutral-800 border rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-colors text-white"
         required={required}
       />
       {field.state.meta.isTouched && <ErrorMessages errors={errors} />}
@@ -103,7 +106,7 @@ export function TextArea({
           onBlur={field.handleBlur}
           rows={rows}
           onChange={(e) => field.handleChange(e.target.value)}
-          className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-white"
         />
       </label>
       {field.state.meta.isTouched && <ErrorMessages errors={errors} />}

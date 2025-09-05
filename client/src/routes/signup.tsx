@@ -2,10 +2,10 @@ import { createFileRoute, redirect } from '@tanstack/react-router'
 
 import AuthForm from '@/components/AuthForm'
 
-export const Route = createFileRoute('/login')({
+export const Route = createFileRoute('/signup')({
   validateSearch: (search) => {
     return {
-      redirect: (search.redirect as string) || '/',
+      redirect: (search.redirect as string) || '',
     }
   },
   beforeLoad: ({ context, search }) => {
@@ -17,10 +17,10 @@ export const Route = createFileRoute('/login')({
       throw redirect({ to: search.redirect })
     }
   },
-  component: Login,
+  component: RouteComponent,
 })
 
-function Login() {
+function RouteComponent() {
   const { auth } = Route.useRouteContext()
   const { redirect: redirectURL } = Route.useSearch()
   const navigate = Route.useNavigate()
@@ -30,9 +30,7 @@ function Login() {
       auth={auth}
       redirect={redirectURL}
       navigate={navigate}
-      isLogin={true}
+      isLogin={false}
     />
   )
 }
-
-export default Login

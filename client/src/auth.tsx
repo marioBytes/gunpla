@@ -5,7 +5,12 @@ import type { AxiosError } from 'axios'
 import type { AuthParams } from '@/types/auth'
 import type { AuthState, User } from './types/auth'
 
-import { userLoginQueryFn, userLogoutFn, userQueryFn } from '@/queries'
+import {
+  userLoginQueryFn,
+  userLogoutFn,
+  userQueryFn,
+  userSignupQueryFn,
+} from '@/queries'
 
 const AuthContext = createContext<AuthState | undefined>(undefined)
 
@@ -38,6 +43,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     mutationFn: userLogoutFn,
   })
 
+  const signupMutation = useMutation({
+    mutationFn: (authData: AuthParams) => userSignupQueryFn(authData),
+  })
+
   useEffect(() => {
     if (data && isSuccess) {
       setUser(data.data)
@@ -52,6 +61,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   if (isLoading || authIsLoading) {
     return <div>Loading...</div>
+  }
+
+  const signup = (email: string, password: string) => {
+    const res = signupMutation.mutateAsync({ email, password })
+    setAuthIsLoading(true)
+
+    res
+      .then((resp) => {
+        setUser(resp.data)
+        setIsAuthenticated(true)
+      })
+      .catch((_error) => {
+        setUser(null)
+        setIsAuthenticated(false)
+      })
+      .finally(() => {
+        setAuthIsLoading(false)
+      })
   }
 
   const login = (email: string, password: string) => {
@@ -91,7 +118,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, isLoading: authIsLoading, user, login, logout }}
+      value={{
+        isAuthenticated,
+        isLoading: authIsLoading,
+        user,
+        login,
+        logout,
+        signup,
+      }}
     >
       {children}
     </AuthContext.Provider>

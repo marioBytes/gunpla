@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import type { Entry } from '@/types'
+import type { Entry } from '@/types/entries'
 import { GRADES, STATUS } from '@/constants'
 import { useAppForm } from '@/hooks/form'
-import { modelCreateQueryFn, modelQueryFn, modelUpdateQueryFn } from '@/query'
+import { modelCreateQueryFn, modelQueryFn, modelUpdateQueryFn } from '@/queries'
 
 interface EntryFormProps {
   entry?: Entry

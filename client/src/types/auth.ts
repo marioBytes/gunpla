@@ -11,3 +11,8 @@ export interface AuthState {
   login: (email: string, password: string) => void
   logout: () => void
 }
+
+export interface AuthParams {
+  email: string
+  password: string
+}

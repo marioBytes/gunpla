@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 
 import type { Entry } from '@/types/entries'
-import { modelsQueryFn } from '@/query'
+import { modelsQueryFn } from '@/queries'
 
 import EntryForm from '@/components/EntryForm'
 import Status from '@/components/Status'

@@ -1,9 +1,11 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { userLoginQueryFn, userLogoutFn, userQueryFn } from './query'
-import type { AuthParams } from './query'
-import type { AuthState, User } from './types/auth'
+
 import type { AxiosError } from 'axios'
+import type { AuthParams } from '@/types/auth'
+import type { AuthState, User } from './types/auth'
+
+import { userLoginQueryFn, userLogoutFn, userQueryFn } from '@/queries'
 
 const AuthContext = createContext<AuthState | undefined>(undefined)
 

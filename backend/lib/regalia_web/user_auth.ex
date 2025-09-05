@@ -67,7 +67,6 @@ defmodule RegaliaWeb.UserAuth do
 
     conn
     |> renew_session()
-    |> delete_resp_cookie("_regalia_key")
   end
 
   def log_out_user_api(conn) do

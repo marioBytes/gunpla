@@ -12,7 +12,7 @@ import { useQuery } from '@tanstack/react-query'
 import EntryForm from './EntryForm'
 import type { Entry } from '@/types/entries'
 import { GRADES } from '@/constants'
-import { modelQueryFn } from '@/query'
+import { modelQueryFn } from '@/queries'
 import { useAuth } from '@/auth'
 
 const ModelViewPage: React.FC<{}> = () => {

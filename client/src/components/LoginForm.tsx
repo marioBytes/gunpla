@@ -1,9 +1,5 @@
-import { useMutation } from '@tanstack/react-query'
-import type { AuthParams } from '@/query'
 import type { AuthState } from '@/types/auth'
 import { useAppForm } from '@/hooks/form'
-import { userLoginQueryFn } from '@/query'
-import Route from '@/routes/login.tsx'
 
 interface LoginFormProps {
   auth: AuthState

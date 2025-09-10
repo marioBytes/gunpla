@@ -34,6 +34,7 @@ defmodule RegaliaWeb.Router do
     get("/models/:id", ModelController, :show)
 
     post("/users/confirm", UserRegistrationController, :update)
+    post("/users/reset_password", UserResetPasswordController, :create)
   end
 
   scope "/api", RegaliaWeb do

@@ -11,6 +11,7 @@ export interface AuthState {
   login: (email: string, password: string) => void
   logout: () => void
   signup: (email: string, password: string) => void
+  resetPassword: (email: string) => void
 }
 
 export interface AuthParams {

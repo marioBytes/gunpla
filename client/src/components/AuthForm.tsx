@@ -56,9 +56,13 @@ const AuthForm: React.FC<Props> = ({ auth, redirect, navigate, isLogin }) => {
           <div className="w-16 h-16 bg-yellow-500 rounded-xl flex items-center justify-center mx-auto mb-4">
             <User className="w-8 h-8 text-black" />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">Create Account</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">
+            {isLogin ? 'Welcome Back' : 'Create Account'}
+          </h1>
           <p className="text-neutral-400">
-            Sign in to access your Gunpla collection
+            {isLogin
+              ? 'Login to access your model collection backlog'
+              : 'Signup to track your model collection backlog'}
           </p>
         </div>
         <form
@@ -89,11 +93,16 @@ const AuthForm: React.FC<Props> = ({ auth, redirect, navigate, isLogin }) => {
                 />
               )}
             </form.AppField>
-            <div className="flex justify-end">
-              <button className="text-sm text-yellow-400 hover:text-yellow-300 transition-colors hover:cursor-pointer">
-                Forgot your password?
-              </button>
-            </div>
+            {isLogin && (
+              <div className="flex justify-end">
+                <Link
+                  to="/reset-password"
+                  className="text-sm text-yellow-400 hover:text-yellow-300 transition-colors hover:cursor-pointer"
+                >
+                  Forgot your password?
+                </Link>
+              </div>
+            )}
 
             <form.AppForm>
               <form.SubscribeButton label="Sign In" className="w-full" />
@@ -101,12 +110,13 @@ const AuthForm: React.FC<Props> = ({ auth, redirect, navigate, isLogin }) => {
           </div>
           <div className="mt-6 text-center">
             <p className="text-gray-400">
-              Don't have an account?
+              {isLogin ? "Don't have an account?" : 'Already have an account?'}
               <Link
-                to="/signup"
+                to={isLogin ? '/signup' : '/login'}
+                search={{ redirect: redirect }}
                 className="ml-2 text-yellow-400 hover:text-yellow-300 font-medium transition-colors hover:cursor-pointer"
               >
-                Sign Up
+                {isLogin ? 'Signup' : 'Login'}
               </Link>
             </p>
           </div>

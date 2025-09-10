@@ -9,6 +9,7 @@ import {
   userLoginQueryFn,
   userLogoutFn,
   userQueryFn,
+  userResetPasswordQueryFn,
   userSignupQueryFn,
 } from '@/queries'
 
@@ -45,6 +46,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const signupMutation = useMutation({
     mutationFn: (authData: AuthParams) => userSignupQueryFn(authData),
+  })
+
+  const resetPasswordMutation = useMutation({
+    mutationFn: (email: string) => userResetPasswordQueryFn(email),
   })
 
   useEffect(() => {
@@ -99,6 +104,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       })
   }
 
+  const resetPassword = (email: string) => {
+    resetPasswordMutation.mutate(email)
+  }
+
   const logout = () => {
     const res = logoutMutation.mutateAsync()
     setAuthIsLoading(true)
@@ -125,6 +134,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         login,
         logout,
         signup,
+        resetPassword,
       }}
     >
       {children}

@@ -7,18 +7,14 @@ defmodule RegaliaWeb.UserResetPasswordController do
 
   def create(conn, %{"user" => %{"email" => email}}) do
     if user = Accounts.get_user_by_email(email) do
-      Accounts.deliver_user_reset_password_instructions(
-        user,
-        &url(~p"/users/reset_password/#{&1}")
-      )
+      Accounts.deliver_user_reset_password_instructions(user)
     end
 
-    conn
-    |> put_flash(
-      :info,
+    message =
       "If your email is in our system, you will receive instructions to reset your password shortly."
-    )
-    |> redirect(to: ~p"/")
+
+    conn
+    |> render(:new, %{message: message})
   end
 
   def edit(conn, _params) do

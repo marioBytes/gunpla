@@ -232,7 +232,7 @@ export function Select({
         value={field.state.value}
         onBlur={field.handleBlur}
         onChange={(e) => field.handleChange(e.target.value)}
-        className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+        className="w-full px-3 py-3 bg-neutral-800 border border-white rounded-lg focus:ring-yellow-400 focus:border-yellow-400"
       >
         {values.map((value) => (
           <option key={value.value} value={value.value}>

@@ -69,11 +69,11 @@ const Dashboard: React.FC<{}> = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
+    <div className="min-h-screen bg-black text-white">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-white mb-2">Gunpla Backlog</h1>
-          <p className="text-gray-400">
+          <p className="text-neutral-400">
             Track your Gundam model collection and build progress
           </p>
         </div>
@@ -85,7 +85,7 @@ const Dashboard: React.FC<{}> = () => {
               placeholder="Search by name or series..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 bg-neutral-800 border border-neutral-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 text-white placeholder-neutral-400"
             />
           </div>
 
@@ -93,7 +93,7 @@ const Dashboard: React.FC<{}> = () => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortBy)}
-              className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="px-3 py-2 bg-neutral-800 border border-neutral-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 text-white"
             >
               {sortOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -103,14 +103,14 @@ const Dashboard: React.FC<{}> = () => {
             </select>
             <button
               onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-              className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-700 transition-colors"
+              className="px-3 py-2 bg-neutral-800 border border-neutral-600 rounded-lg hover:bg-neutral-700 transition-colors text-white"
             >
               {sortOrder === 'asc' ? '↑' : '↓'}
             </button>
           </div>
           <button
             onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors font-medium"
+            className="flex items-center gap-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-black rounded-lg transition-colors font-medium"
           >
             Add Entry
           </button>
@@ -144,6 +144,7 @@ const Dashboard: React.FC<{}> = () => {
                     to="/entries/$entryId"
                     params={{ entryId: entry.id }}
                     key={entry.id}
+                    className="block hover:opacity-80 transition-opacity"
                   >
                     <EntryCard key={entry.id} entry={entry} />
                   </Link>
@@ -153,7 +154,7 @@ const Dashboard: React.FC<{}> = () => {
           </div>
         ) : (
           <div className="text-center py-12">
-            <p className="text-gray-400">No entries found</p>
+            <p className="text-neutral-400">No entries found</p>
           </div>
         )}
       </div>

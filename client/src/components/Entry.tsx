@@ -69,13 +69,13 @@ const ModelViewPage: React.FC<{}> = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
+    <div className="min-h-screen bg-black text-white">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         {user && (
           <div className="flex items-center gap-4 mb-6">
             <Link
               to="/dashboard"
-              className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-neutral-800 hover:bg-neutral-700 rounded-lg transition-colors border border-neutral-600"
             >
               <ArrowLeft className="w-5 h-5" />
               Back to Dashboard
@@ -85,8 +85,8 @@ const ModelViewPage: React.FC<{}> = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="space-y-4">
-            <div className="bg-gray-800 rounded-lg overflow-hidden">
-              <div className="aspect-square bg-gray-700 relative">
+            <div className="bg-neutral-900 border border-neutral-700 rounded-lg overflow-hidden">
+              <div className="aspect-square bg-neutral-800 relative">
                 {model.images.length > 0 ? (
                   <>
                     <img
@@ -120,7 +120,7 @@ const ModelViewPage: React.FC<{}> = () => {
                     )}
                   </>
                 ) : (
-                  <div className="w-full h-full flex flex-col items-center justify-center text-gray-500">
+                  <div className="w-full h-full flex flex-col items-center justify-center text-neutral-400">
                     <Camera className="w-16 h-16 mb-4" />
                     <span className="text-lg font-medium mb-2">
                       No images uploaded
@@ -129,7 +129,7 @@ const ModelViewPage: React.FC<{}> = () => {
                       Upload some photos of your Gunpla model to showcase your
                       build!
                     </p>
-                    <button className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                    <button className="mt-4 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-black rounded-lg transition-colors font-medium">
                       Upload Images
                     </button>
                   </div>
@@ -145,8 +145,8 @@ const ModelViewPage: React.FC<{}> = () => {
                     onClick={() => setCurrentImageIndex(index)}
                     className={`w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-colors ${
                       currentImageIndex === index
-                        ? 'border-blue-400'
-                        : 'border-gray-600 hover:border-gray-500'
+                        ? 'border-yellow-500'
+                        : 'border-neutral-600 hover:border-neutral-500'
                     }`}
                   >
                     <img
@@ -164,10 +164,10 @@ const ModelViewPage: React.FC<{}> = () => {
             <EntryForm entry={model} onCancel={() => setIsEditMode(false)} />
           ) : (
             <>
-              <div className="bg-gray-800 rounded-lg p-6">
+              <div className="bg-neutral-900 border border-neutral-700 rounded-lg p-6">
                 <div className="space-y-6">
                   <div>
-                    <p className="block text-sm font-medium text-gray-400 mb-2">
+                    <p className="block text-sm font-medium text-neutral-400 mb-2">
                       Model Name
                     </p>
                     <h1 className="text-2xl font-bold text-white">
@@ -176,7 +176,7 @@ const ModelViewPage: React.FC<{}> = () => {
                   </div>
 
                   <div>
-                    <p className="block text-sm font-medium text-gray-400 mb-2">
+                    <p className="block text-sm font-medium text-neutral-400 mb-2">
                       Grade
                     </p>
                     <p className="text-lg text-white">
@@ -185,7 +185,7 @@ const ModelViewPage: React.FC<{}> = () => {
                   </div>
 
                   <div>
-                    <p className="block text-sm font-medium text-gray-400 mb-2">
+                    <p className="block text-sm font-medium text-neutral-400 mb-2">
                       Series
                     </p>
                     <p className="text-lg text-white">
@@ -194,19 +194,19 @@ const ModelViewPage: React.FC<{}> = () => {
                   </div>
 
                   <div>
-                    <p className="block text-sm font-medium text-gray-400 mb-2">
+                    <p className="block text-sm font-medium text-neutral-400 mb-2">
                       Status
                     </p>
-                    <div className="inline-flex items-center gap-2 px-3 py-2 bg-gray-700 rounded-lg">
+                    <div className="inline-flex items-center gap-2 px-3 py-2 bg-neutral-800 border border-neutral-600 rounded-lg">
                       <div
                         className={`w-3 h-3 rounded-full ${
                           model.status === 'completed'
-                            ? 'bg-green-400'
+                            ? 'bg-yellow-500'
                             : model.status === 'in-progress'
                               ? 'bg-yellow-400'
                               : model.status === 'on-hold'
-                                ? 'bg-orange-400'
-                                : 'bg-blue-400'
+                                ? 'bg-neutral-400'
+                                : 'bg-neutral-500'
                         }`}
                       />
                       <span className="text-white capitalize">
@@ -218,10 +218,10 @@ const ModelViewPage: React.FC<{}> = () => {
                 </div>
 
                 {user?.id === model.owner_id && (
-                  <div className="mt-8 pt-6 border-t border-gray-700">
+                  <div className="mt-8 pt-6 border-t border-neutral-700">
                     <button
                       onClick={() => setIsEditMode(true)}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-yellow-500 hover:bg-yellow-600 text-black rounded-lg transition-colors font-medium"
                     >
                       <Edit className="w-5 h-5" />
                       Edit Model Information

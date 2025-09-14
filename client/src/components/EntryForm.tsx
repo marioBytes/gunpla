@@ -75,7 +75,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ entry, onCancel }) => {
   }
 
   return (
-    <div className="bg-gray-800 rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
+    <div className="bg-neutral-900 border border-neutral-700 rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
       <form
         onSubmit={(e) => {
           e.preventDefault()
@@ -84,7 +84,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ entry, onCancel }) => {
         }}
         className="p-6"
       >
-        <h2 className="text-xl font-bold mb-4">
+        <h2 className="text-xl font-bold mb-4 text-white">
           {entry ? 'Update ' : 'Add New '} Entry
         </h2>
 
@@ -116,7 +116,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ entry, onCancel }) => {
         <div className="flex gap-3 mt-6">
           <button
             onClick={() => handleOnCancel()}
-            className="flex-1 px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-lg transition-colors"
+            className="flex-1 px-4 py-2 bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg transition-colors border border-neutral-600"
           >
             Cancel
           </button>

@@ -9,6 +9,7 @@ import {
   userLoginQueryFn,
   userLogoutFn,
   userQueryFn,
+  userRequestResetPasswordQueryFn,
   userResetPasswordQueryFn,
   userSignupQueryFn,
 } from '@/queries'
@@ -17,6 +18,11 @@ const AuthContext = createContext<AuthState | undefined>(undefined)
 
 interface AuthProviderProps {
   children: React.ReactNode
+}
+
+export interface PasswordResetParams {
+  password: string
+  token: string
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
@@ -48,8 +54,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     mutationFn: (authData: AuthParams) => userSignupQueryFn(authData),
   })
 
+  const requestResetPasswordMutation = useMutation({
+    mutationFn: (email: string) => userRequestResetPasswordQueryFn(email),
+  })
+
   const resetPasswordMutation = useMutation({
-    mutationFn: (email: string) => userResetPasswordQueryFn(email),
+    mutationFn: (params: PasswordResetParams) =>
+      userResetPasswordQueryFn(params),
   })
 
   useEffect(() => {
@@ -104,8 +115,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       })
   }
 
-  const resetPassword = (email: string) => {
-    resetPasswordMutation.mutate(email)
+  const reqestResetPassword = (email: string) => {
+    requestResetPasswordMutation.mutate(email)
+  }
+
+  const resetPassword = (password: string, token: string) => {
+    resetPasswordMutation.mutate({ password, token })
   }
 
   const logout = () => {
@@ -134,6 +149,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         login,
         logout,
         signup,
+        reqestResetPassword,
         resetPassword,
       }}
     >

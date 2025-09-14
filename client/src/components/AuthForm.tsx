@@ -2,7 +2,9 @@ import { User } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 
 import type { AuthState } from '@/types/auth'
+import { PasswordField } from '@/components/FormComponents'
 import { useAppForm } from '@/hooks/form'
+import { validatePasswordRequirements } from '@/utils/utils'
 
 interface Props {
   auth: AuthState
@@ -16,6 +18,7 @@ const AuthForm: React.FC<Props> = ({ auth, redirect, navigate, isLogin }) => {
     defaultValues: {
       email: '',
       password: '',
+      passwordConfirmation: '',
     },
     validators: {
       onChange: ({ value }) => {
@@ -25,14 +28,29 @@ const AuthForm: React.FC<Props> = ({ auth, redirect, navigate, isLogin }) => {
           fields: Record<string, string>
         }
 
-        const { email, password } = value
+        const { email, password, passwordConfirmation } = value
 
         if (email.trim().length === 0) {
           errors.fields.email = 'Email is required!'
         }
 
-        if (password.trim().length === 0) {
-          errors.fields.password = 'Password is required'
+        if (!isLogin) {
+          const requirements = validatePasswordRequirements(password)
+          const allRequirementsMet = Object.values(requirements).every(Boolean)
+
+          if (password && !allRequirementsMet) {
+            errors.fields.password = 'Password does not meet requirements'
+          }
+
+          if (allRequirementsMet) {
+            if (passwordConfirmation && password !== passwordConfirmation) {
+              errors.fields.passwordConfirmation = 'Passwords do not match'
+            }
+          }
+        } else {
+          if (password.trim().length === 0) {
+            errors.fields.password = 'Password is required!'
+          }
         }
 
         return errors
@@ -85,14 +103,26 @@ const AuthForm: React.FC<Props> = ({ auth, redirect, navigate, isLogin }) => {
             </form.AppField>
 
             <form.AppField name="password">
-              {(field) => (
-                <field.TextField
-                  type="password"
+              {(_field) => (
+                <PasswordField
                   label="Password"
                   placeholder="Enter your Password"
+                  showValidation={!isLogin}
                 />
               )}
             </form.AppField>
+
+            {!isLogin && (
+              <form.AppField name="passwordConfirmation">
+                {(_field) => (
+                  <PasswordField
+                    label="Confirm Password"
+                    placeholder="Confirm your Password"
+                  />
+                )}
+              </form.AppField>
+            )}
+
             {isLogin && (
               <div className="flex justify-end">
                 <Link

@@ -1,4 +1,5 @@
 import axios from './base'
+import type { PasswordResetParams } from '@/auth'
 import type { AuthParams } from '@/types/auth'
 
 export const userSignupQueryFn = async (payload: AuthParams) => {
@@ -13,9 +14,19 @@ export const userLoginQueryFn = async (payload: AuthParams) => {
   return data
 }
 
-export const userResetPasswordQueryFn = async (email: string) => {
+export const userRequestResetPasswordQueryFn = async (email: string) => {
   const { data } = await axios.post('/users/reset_password', {
     user: { email: email },
+  })
+
+  return data
+}
+
+export const userResetPasswordQueryFn = async (
+  payload: PasswordResetParams,
+) => {
+  const { data } = await axios.post(`/users/reset_password/${payload.token}`, {
+    user: { password: payload.password },
   })
 
   return data

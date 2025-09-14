@@ -1,7 +1,10 @@
+import { useState } from 'react'
 import { useStore } from '@tanstack/react-form'
+import { Check, Eye, EyeOff, X } from 'lucide-react'
 
 import { useFieldContext, useFormContext } from '../hooks/form-context'
 import type { UseMutationResult } from '@tanstack/react-query'
+import { validatePasswordRequirements } from '@/utils/utils'
 
 export function SubscribeButton({
   label,
@@ -79,10 +82,104 @@ export function TextField({
         placeholder={placeholder}
         onBlur={field.handleBlur}
         onChange={(e) => field.handleChange(e.target.value)}
-        className="w-full pl-2 pr-4 py-3 bg-neutral-800 border rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-colors text-white"
+        className="w-full pl-3 pr-4 py-3 bg-neutral-800 border rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-colors text-white"
         required={required}
       />
       {field.state.meta.isTouched && <ErrorMessages errors={errors} />}
+    </div>
+  )
+}
+
+const RequirementItem: React.FC<{
+  met: boolean
+  children: React.ReactNode
+}> = ({ met, children }) => {
+  return (
+    <div
+      className={`flex items-center space-x-2 text-sm transition-colors duration-200 ${
+        met ? 'text-green-400' : 'text-neutral-400'
+      }`}
+    >
+      {met ? (
+        <Check className="w-4 h-4 text-green-400" />
+      ) : (
+        <X className="w-4 h-4 text-neutral-500" />
+      )}
+      <span>{children}</span>
+    </div>
+  )
+}
+
+export function PasswordField({
+  label,
+  placeholder,
+  showValidation = false,
+}: {
+  label: string
+  placeholder: string
+  showValidation?: boolean
+}) {
+  const field = useFieldContext<string>()
+  const [showPassword, setShowPassword] = useState(false)
+  const errors = useStore(field.store, (state) => state.meta.errors)
+
+  const password = field.state.value
+  const requirements = validatePasswordRequirements(password)
+
+  return (
+    <div className="space-y-4">
+      <label
+        htmlFor={label}
+        className="block text-sm font-medium text-white mb-2"
+      >
+        {label}
+      </label>
+
+      <div className="relative">
+        <input
+          type={showPassword ? 'text' : 'password'}
+          value={password}
+          placeholder={placeholder}
+          onBlur={field.handleBlur}
+          onChange={(e) => field.handleChange(e.target.value)}
+          className="w-full bg-neutral-800 border text-white rounded-lg py-3 pl-3 pr-12 focus:outline-none focus:ring-2 transition-colors"
+        />
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-white transition-colors"
+        >
+          {showPassword ? (
+            <EyeOff className="w-5 h-5" />
+          ) : (
+            <Eye className="w-5 h-5" />
+          )}
+        </button>
+      </div>
+
+      {field.state.meta.isTouched && errors.length > 0 && (
+        <ErrorMessages errors={errors} />
+      )}
+
+      {showValidation && (
+        <div className="bg-neutral-800 rounded-lg p-4 border border-neutral-600 space-y-2">
+          <div className="text-sm font-medium text-neutral-300 mb-2">
+            Password Requirements:
+          </div>
+          <RequirementItem met={requirements.length}>
+            At least 12 characters
+          </RequirementItem>
+          <RequirementItem met={requirements.uppercase}>
+            One uppercase letter (A-Z)
+          </RequirementItem>
+          <RequirementItem met={requirements.number}>
+            One number (0-9)
+          </RequirementItem>
+          <RequirementItem met={requirements.special}>
+            One special character (!@#$%^&*)
+          </RequirementItem>
+        </div>
+      )}
     </div>
   )
 }
@@ -146,4 +243,10 @@ export function Select({
       {field.state.meta.isTouched && <ErrorMessages errors={errors} />}
     </div>
   )
+}
+
+export function PasswordValidator({ value }: { value: string }) {
+  console.log(value)
+
+  return <div>Hello</div>
 }

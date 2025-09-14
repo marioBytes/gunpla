@@ -17,19 +17,19 @@ defmodule RegaliaWeb.UserResetPasswordController do
     |> render(:new, %{message: message})
   end
 
-  def edit(conn, _params) do
-    render(conn, :edit, changeset: Accounts.change_user_password(conn.assigns.user))
-  end
-
   # Do not log in the user after reset password to avoid a
   # leaked token giving the user access to the account.
   def update(conn, %{"user" => user_params}) do
     case Accounts.reset_user_password(conn.assigns.user, user_params) do
       {:ok, _} ->
         conn
+        |> send_resp(201, "Password updated")
 
       {:error, changeset} ->
-        render(conn, :edit, changeset: changeset)
+        conn
+        |> put_status(:unprocessable_entity)
+        |> put_view(RegaliaWeb.ChangesetJSON)
+        |> render("error.json", changeset: changeset)
     end
   end
 
@@ -40,6 +40,7 @@ defmodule RegaliaWeb.UserResetPasswordController do
       conn |> assign(:user, user) |> assign(:token, token)
     else
       conn
+      |> send_resp(500, "Token expired")
       |> halt()
     end
   end

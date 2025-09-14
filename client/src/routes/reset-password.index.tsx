@@ -3,7 +3,7 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import type { AuthState } from '@/types/auth'
 import { useAppForm } from '@/hooks/form'
 
-export const Route = createFileRoute('/reset-password')({
+export const Route = createFileRoute('/reset-password/')({
   component: RouteComponent,
 })
 
@@ -39,7 +39,7 @@ const ResetPasswordForm: React.FC<Props> = ({ auth }) => {
       },
     },
     onSubmit: ({ value }) => {
-      auth.resetPassword(value.email)
+      auth.reqestResetPassword(value.email)
     },
   })
 

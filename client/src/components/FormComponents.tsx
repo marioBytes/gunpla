@@ -244,9 +244,3 @@ export function Select({
     </div>
   )
 }
-
-export function PasswordValidator({ value }: { value: string }) {
-  console.log(value)
-
-  return <div>Hello</div>
-}

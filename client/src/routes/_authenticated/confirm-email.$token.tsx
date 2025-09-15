@@ -57,11 +57,11 @@ const EmailConfirmed: React.FC<EmailConfirmedProps> = ({ auth }) => {
       title: 'Progress Tracking',
       description: 'Log your build progress and showcase completed models',
     },
-    {
-      icon: <Users className="w-6 h-6" />,
-      title: 'Community Features',
-      description: 'Share builds and connect with fellow Gunpla enthusiasts',
-    },
+    // {
+    //   icon: <Users className="w-6 h-6" />,
+    //   title: 'Community Features',
+    //   description: 'Share builds and connect with fellow Gunpla enthusiasts',
+    // },
   ]
 
   return (

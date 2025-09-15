@@ -16,7 +16,7 @@ defmodule RegaliaWeb.UserConfirmationController do
   def update(conn, %{"token" => token}) do
     case Accounts.confirm_user(token) do
       {:ok, _} ->
-        conn
+        send_resp(conn, :ok, "User confirmed")
 
       :error ->
         # If there is a current user and the account was already confirmed,
@@ -25,12 +25,10 @@ defmodule RegaliaWeb.UserConfirmationController do
         # a warning message.
         case conn.assigns do
           %{current_user: %{confirmed_at: confirmed_at}} when not is_nil(confirmed_at) ->
-            redirect(conn, to: ~p"/")
+            send_resp(conn, :ok, "User confirmed")
 
           %{} ->
-            conn
-            |> put_flash(:error, "User confirmation link is invalid or it has expired.")
-            |> redirect(to: ~p"/")
+            send_resp(conn, 500, "User confirmation link is invalid or it has expired.")
         end
     end
   end

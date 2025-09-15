@@ -11,13 +11,15 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as ConfirmEmailRouteImport } from './routes/confirm-email'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ResetPasswordIndexRouteImport } from './routes/reset-password.index'
 import { Route as ResetPasswordTokenRouteImport } from './routes/reset-password.$token'
 import { Route as EntriesEntryIdRouteImport } from './routes/entries.$entryId'
-import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
+import { Route as AuthenticatedConfirmRouteImport } from './routes/_authenticated/_confirm'
+import { Route as AuthenticatedConfirmEmailIndexRouteImport } from './routes/_authenticated/confirm-email.index'
+import { Route as AuthenticatedConfirmEmailTokenRouteImport } from './routes/_authenticated/confirm-email.$token'
+import { Route as AuthenticatedConfirmDashboardIndexRouteImport } from './routes/_authenticated/_confirm/dashboard.index'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -27,11 +29,6 @@ const SignupRoute = SignupRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ConfirmEmailRoute = ConfirmEmailRouteImport.update({
-  id: '/confirm-email',
-  path: '/confirm-email',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -58,83 +55,106 @@ const EntriesEntryIdRoute = EntriesEntryIdRouteImport.update({
   path: '/entries/$entryId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedDashboardIndexRoute =
-  AuthenticatedDashboardIndexRouteImport.update({
+const AuthenticatedConfirmRoute = AuthenticatedConfirmRouteImport.update({
+  id: '/_confirm',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedConfirmEmailIndexRoute =
+  AuthenticatedConfirmEmailIndexRouteImport.update({
+    id: '/confirm-email/',
+    path: '/confirm-email/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedConfirmEmailTokenRoute =
+  AuthenticatedConfirmEmailTokenRouteImport.update({
+    id: '/confirm-email/$token',
+    path: '/confirm-email/$token',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedConfirmDashboardIndexRoute =
+  AuthenticatedConfirmDashboardIndexRouteImport.update({
     id: '/dashboard/',
     path: '/dashboard/',
-    getParentRoute: () => AuthenticatedRoute,
+    getParentRoute: () => AuthenticatedConfirmRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/confirm-email': typeof ConfirmEmailRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/entries/$entryId': typeof EntriesEntryIdRoute
   '/reset-password/$token': typeof ResetPasswordTokenRoute
   '/reset-password': typeof ResetPasswordIndexRoute
-  '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/confirm-email/$token': typeof AuthenticatedConfirmEmailTokenRoute
+  '/confirm-email': typeof AuthenticatedConfirmEmailIndexRoute
+  '/dashboard': typeof AuthenticatedConfirmDashboardIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/confirm-email': typeof ConfirmEmailRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/entries/$entryId': typeof EntriesEntryIdRoute
   '/reset-password/$token': typeof ResetPasswordTokenRoute
   '/reset-password': typeof ResetPasswordIndexRoute
-  '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/confirm-email/$token': typeof AuthenticatedConfirmEmailTokenRoute
+  '/confirm-email': typeof AuthenticatedConfirmEmailIndexRoute
+  '/dashboard': typeof AuthenticatedConfirmDashboardIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
-  '/confirm-email': typeof ConfirmEmailRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/_authenticated/_confirm': typeof AuthenticatedConfirmRouteWithChildren
   '/entries/$entryId': typeof EntriesEntryIdRoute
   '/reset-password/$token': typeof ResetPasswordTokenRoute
   '/reset-password/': typeof ResetPasswordIndexRoute
-  '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/_authenticated/confirm-email/$token': typeof AuthenticatedConfirmEmailTokenRoute
+  '/_authenticated/confirm-email/': typeof AuthenticatedConfirmEmailIndexRoute
+  '/_authenticated/_confirm/dashboard/': typeof AuthenticatedConfirmDashboardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/confirm-email'
     | '/login'
     | '/signup'
     | '/entries/$entryId'
     | '/reset-password/$token'
     | '/reset-password'
+    | '/confirm-email/$token'
+    | '/confirm-email'
     | '/dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/confirm-email'
     | '/login'
     | '/signup'
     | '/entries/$entryId'
     | '/reset-password/$token'
     | '/reset-password'
+    | '/confirm-email/$token'
+    | '/confirm-email'
     | '/dashboard'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
-    | '/confirm-email'
     | '/login'
     | '/signup'
+    | '/_authenticated/_confirm'
     | '/entries/$entryId'
     | '/reset-password/$token'
     | '/reset-password/'
-    | '/_authenticated/dashboard/'
+    | '/_authenticated/confirm-email/$token'
+    | '/_authenticated/confirm-email/'
+    | '/_authenticated/_confirm/dashboard/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
-  ConfirmEmailRoute: typeof ConfirmEmailRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
   EntriesEntryIdRoute: typeof EntriesEntryIdRoute
@@ -156,13 +176,6 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/confirm-email': {
-      id: '/confirm-email'
-      path: '/confirm-email'
-      fullPath: '/confirm-email'
-      preLoaderRoute: typeof ConfirmEmailRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -200,22 +213,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EntriesEntryIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/dashboard/': {
-      id: '/_authenticated/dashboard/'
+    '/_authenticated/_confirm': {
+      id: '/_authenticated/_confirm'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedConfirmRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/confirm-email/': {
+      id: '/_authenticated/confirm-email/'
+      path: '/confirm-email'
+      fullPath: '/confirm-email'
+      preLoaderRoute: typeof AuthenticatedConfirmEmailIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/confirm-email/$token': {
+      id: '/_authenticated/confirm-email/$token'
+      path: '/confirm-email/$token'
+      fullPath: '/confirm-email/$token'
+      preLoaderRoute: typeof AuthenticatedConfirmEmailTokenRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/_confirm/dashboard/': {
+      id: '/_authenticated/_confirm/dashboard/'
       path: '/dashboard'
       fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
-      parentRoute: typeof AuthenticatedRoute
+      preLoaderRoute: typeof AuthenticatedConfirmDashboardIndexRouteImport
+      parentRoute: typeof AuthenticatedConfirmRoute
     }
   }
 }
 
+interface AuthenticatedConfirmRouteChildren {
+  AuthenticatedConfirmDashboardIndexRoute: typeof AuthenticatedConfirmDashboardIndexRoute
+}
+
+const AuthenticatedConfirmRouteChildren: AuthenticatedConfirmRouteChildren = {
+  AuthenticatedConfirmDashboardIndexRoute:
+    AuthenticatedConfirmDashboardIndexRoute,
+}
+
+const AuthenticatedConfirmRouteWithChildren =
+  AuthenticatedConfirmRoute._addFileChildren(AuthenticatedConfirmRouteChildren)
+
 interface AuthenticatedRouteChildren {
-  AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
+  AuthenticatedConfirmRoute: typeof AuthenticatedConfirmRouteWithChildren
+  AuthenticatedConfirmEmailTokenRoute: typeof AuthenticatedConfirmEmailTokenRoute
+  AuthenticatedConfirmEmailIndexRoute: typeof AuthenticatedConfirmEmailIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
+  AuthenticatedConfirmRoute: AuthenticatedConfirmRouteWithChildren,
+  AuthenticatedConfirmEmailTokenRoute: AuthenticatedConfirmEmailTokenRoute,
+  AuthenticatedConfirmEmailIndexRoute: AuthenticatedConfirmEmailIndexRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
@@ -225,7 +275,6 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
-  ConfirmEmailRoute: ConfirmEmailRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
   EntriesEntryIdRoute: EntriesEntryIdRoute,

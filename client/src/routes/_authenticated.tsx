@@ -9,13 +9,6 @@ export const Route = createFileRoute('/_authenticated')({
           redirect: location.href,
         },
       })
-    } else if (!!context.auth.user && !context.auth.isConfirmed) {
-      throw redirect({
-        to: '/confirm-email',
-        search: {
-          redirect: location.href,
-        },
-      })
     }
   },
   component: () => <Outlet />,

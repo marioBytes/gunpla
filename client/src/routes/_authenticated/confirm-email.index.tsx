@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { Info, Loader2, Mail, RefreshCw } from 'lucide-react'
 
 import type { AuthState } from '@/types/auth'
@@ -117,24 +117,7 @@ const EmailConfirmation: React.FC<EmailConfirmationProps> = ({ auth }) => {
   )
 }
 
-export const Route = createFileRoute('/confirm-email')({
-  beforeLoad: ({ context, location }) => {
-    if (!context.auth.isAuthenticated) {
-      throw redirect({
-        to: '/login',
-        search: {
-          redirect: location.href,
-        },
-      })
-    } else if (!!context.auth.user && context.auth.isConfirmed) {
-      throw redirect({
-        to: '/dashboard',
-        search: {
-          redirect: location.href,
-        },
-      })
-    }
-  },
+export const Route = createFileRoute('/_authenticated/confirm-email/')({
   component: RouteComponent,
 })
 

@@ -2,13 +2,12 @@ export interface User {
   id: string
   username: string | null
   email: string
-  confirmed_at: Date | null
+  confirmed_at: string | null
 }
 
 export interface AuthState {
   isAuthenticated: boolean
   isLoading: boolean
-  isConfirmed: boolean
   user: User | null
   login: (email: string, password: string) => void
   logout: () => void

@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
-import { createFileRoute } from '@tanstack/react-router'
+import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { Info, Loader2, Mail, RefreshCw } from 'lucide-react'
 
 import type { AuthState } from '@/types/auth'
-import axios from '@/queries/base'
+import { userResendConfirmAccountQueryFn } from '@/queries'
 
 interface EmailConfirmationProps {
   auth: AuthState
@@ -12,18 +13,24 @@ interface EmailConfirmationProps {
 const EmailConfirmation: React.FC<EmailConfirmationProps> = ({ auth }) => {
   const [isResending, setIsResending] = useState(false)
 
-  const resend = async () => {
+  const resendMutation = useMutation({
+    mutationFn: () => userResendConfirmAccountQueryFn(auth.user!.email),
+  })
+
+  const resend = () => {
+    const res = resendMutation.mutateAsync()
     setIsResending(true)
 
-    try {
-      await axios.post('/users/resend_confirmation', {
-        user: { email: auth.user?.email },
+    res
+      .then((_resp) => {
+        console.log('confirmation email resent')
       })
-    } catch (err) {
-      console.error('oh shit, something went wrong', err)
-    }
-
-    setIsResending(false)
+      .catch((_error) => {
+        console.error('oh shit, something went wrong')
+      })
+      .finally(() => {
+        setIsResending(false)
+      })
   }
 
   return (
@@ -32,7 +39,7 @@ const EmailConfirmation: React.FC<EmailConfirmationProps> = ({ auth }) => {
         <div className="max-w-md w-full">
           <div className="bg-neutral-900 border border-neutral-700 rounded-lg p-8 shadow-2xl">
             <div className="text-center mb-6">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-500 rounded-full mb-4 animate-pulse">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-500 rounded-full mb-4">
                 <Mail className="w-8 h-8 text-black" />
               </div>
               <h1 className="text-2xl font-bold text-white mb-2">
@@ -119,6 +126,13 @@ const EmailConfirmation: React.FC<EmailConfirmationProps> = ({ auth }) => {
 
 export const Route = createFileRoute('/_authenticated/confirm-email/')({
   component: RouteComponent,
+  beforeLoad: ({ context }) => {
+    if (context.auth.user?.confirmed_at) {
+      throw redirect({
+        to: '/dashboard',
+      })
+    }
+  },
 })
 
 function RouteComponent() {

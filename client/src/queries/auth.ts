@@ -32,6 +32,20 @@ export const userResetPasswordQueryFn = async (
   return data
 }
 
+export const userResendConfirmAccountQueryFn = async (email: string) => {
+  const { data } = await axios.post('/users/resend_confirmation', {
+    user: { email },
+  })
+
+  return data
+}
+
+export const userConfirmAccountQueryFn = async (token: string) => {
+  const { data } = await axios.post('/users/confirm', { token })
+
+  return data
+}
+
 export const userLogoutFn = async () => {
   const { data } = await axios.delete('/logout')
 

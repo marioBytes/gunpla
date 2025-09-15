@@ -29,7 +29,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [authIsLoading, setAuthIsLoading] = useState(true)
-  const [isConfirmed, setIsConfirmed] = useState(false)
 
   const { data, isError, isLoading, isSuccess } = useQuery({
     queryKey: ['/users'],
@@ -106,7 +105,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       .then((resp) => {
         setUser(resp.data)
         setIsAuthenticated(true)
-        setIsConfirmed(!!resp.data.confirmed_at)
       })
       .catch((_error) => {
         setUser(null)
@@ -153,7 +151,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         signup,
         reqestResetPassword,
         resetPassword,
-        isConfirmed,
       }}
     >
       {children}

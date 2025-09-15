@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import { createFileRoute } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
+import { createFileRoute, redirect, useParams } from '@tanstack/react-router'
+import { useMutation } from '@tanstack/react-query'
 
 import { ArrowRight, BookOpen, CheckCircle, Users, Zap } from 'lucide-react'
 
 import type { AuthState } from '@/types/auth'
 import ButtonLink from '@/components/ButtonLink'
+import { userConfirmAccountQueryFn } from '@/queries'
 
 interface EmailConfirmedProps {
   auth: AuthState
-  onContinueToDashboard?: () => void
-  onStartTour?: () => void
-  isAutoRedirecting?: boolean
-  redirectDelay?: number // seconds
 }
 
 interface Feature {
@@ -20,39 +18,32 @@ interface Feature {
   description: string
 }
 
-const EmailConfirmed: React.FC<EmailConfirmedProps> = ({
-  auth,
-  onContinueToDashboard,
-  onStartTour,
-  isAutoRedirecting = false,
-  redirectDelay = 5,
-}) => {
-  const [countdown, setCountdown] = useState(redirectDelay)
-  const [isRedirecting, setIsRedirecting] = useState(false)
+const EmailConfirmed: React.FC<EmailConfirmedProps> = ({ auth }) => {
+  const { token } = useParams({ from: '/_authenticated/confirm-email/$token' })
+  const [loading, setLoading] = useState(false)
 
-  // Countdown timer for auto-redirect
+  const confirmMutation = useMutation({
+    mutationFn: () => userConfirmAccountQueryFn(token),
+  })
+
   useEffect(() => {
-    if (isAutoRedirecting && countdown > 0) {
-      const timer = setTimeout(() => {
-        setCountdown((prev) => prev - 1)
-      }, 1000)
-      return () => clearTimeout(timer)
-    } else if (isAutoRedirecting && countdown === 0) {
-      handleContinue()
-    }
-  }, [isAutoRedirecting, countdown])
+    const res = confirmMutation.mutateAsync()
 
-  const handleContinue = async () => {
-    setIsRedirecting(true)
+    setLoading(true)
+    res
+      .then(() => {
+        console.log('email confirmed')
+      })
+      .catch((err) => {
+        console.error('oh shit, something went wrong', err)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [])
 
-    // Simulate brief loading
-    await new Promise((resolve) => setTimeout(resolve, 500))
-
-    if (onContinueToDashboard) {
-      onContinueToDashboard()
-    } else {
-      console.log('Navigate to dashboard')
-    }
+  if (loading) {
+    return <div>loading</div>
   }
 
   const features: Array<Feature> = [
@@ -146,6 +137,13 @@ const EmailConfirmed: React.FC<EmailConfirmedProps> = ({
 
 export const Route = createFileRoute('/_authenticated/confirm-email/$token')({
   component: RouteComponent,
+  beforeLoad: ({ context }) => {
+    if (context.auth.user?.confirmed_at) {
+      throw redirect({
+        to: '/dashboard',
+      })
+    }
+  },
 })
 
 function RouteComponent() {

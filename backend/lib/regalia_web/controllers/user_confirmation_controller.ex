@@ -5,13 +5,10 @@ defmodule RegaliaWeb.UserConfirmationController do
 
   def create(conn, %{"user" => %{"email" => email}}) do
     if user = Accounts.get_user_by_email(email) do
-      Accounts.deliver_user_confirmation_instructions(
-        user,
-        &url(~p"/users/confirm/#{&1}")
-      )
+      Accounts.deliver_user_confirmation_instructions(user)
     end
 
-    conn
+    send_resp(conn, :ok, "Confirmation email sent")
   end
 
   # Do not log in the user after confirmation to avoid a

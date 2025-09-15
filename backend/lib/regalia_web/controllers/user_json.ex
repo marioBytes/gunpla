@@ -14,7 +14,8 @@ defmodule RegaliaWeb.UserJSON do
       id: user.id,
       email: user.email,
       username: user.username,
-      profile_picture_url: user.profile_picture_url
+      profile_picture_url: user.profile_picture_url,
+      confirmed_at: user.confirmed_at
     }
   end
 end

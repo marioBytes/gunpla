@@ -33,7 +33,8 @@ defmodule RegaliaWeb.Router do
 
     get("/models/:id", ModelController, :show)
 
-    post("/users/confirm", UserRegistrationController, :update)
+    post("/users/resend_confirmation", UserConfirmationController, :create)
+    post("/users/confirm", UserConfirmationController, :update)
     post("/users/reset_password", UserResetPasswordController, :create)
     post("/users/reset_password/:token", UserResetPasswordController, :update)
   end
